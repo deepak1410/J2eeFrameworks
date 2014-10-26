@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:context="http://www.springframework.org/schema/context"
+  xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr"
+  xmlns:mongo="http://www.springframework.org/schema/data/mongo"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/data/mongo
+    http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd
+    http://www.directwebremoting.org/schema/spring-dwr
+    http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd">
+
+    <context:annotation-config/>
+
+	<!-- <bean id="cricketer" class="org.deepak.annotations.Batsman">
+	</bean> -->
+
+    <bean id="playerDetails" class="org.deepak.annotations.PlayerDetails">
+        <qualifier value="playerInfo"></qualifier>
+        <property name="playerType" value="One-Day Player"></property>
+        <property name="handedness" value="Left Arm player"></property>
+    </bean>
+    
+    <!-- Below mentioned beans are required to use the Required and Autowired annotations. A Better way is to use context:annotation-config 
+    instead of defining each and every beans. This configuration enable developer to use any annotation without defining in the xml file.-->
+    
+    <!-- <bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor" /> -->
+    <!-- <bean class="org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor" /> -->
+    
+    
+    <!--This annotation tells Spring that there are some bean classes which have not been explicitly defined in the XML file 
+    but they have been annotated -->
+    <context:component-scan base-package="org.deepak.annotations"></context:component-scan>
+    
+    <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basenames">
+        <!-- Giving list just in case if there are multiple properties files -->
+            <list>
+                <value>messages</value>
+            </list>
+        </property>
+    </bean>
+
+</beans> 

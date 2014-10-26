@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans 
+                           http://www.springframework.org/schema/beans/spring-beans.xsd" default-init-method="myInit" default-destroy-method="myDesposable">
+
+<bean id= "triangle" name="triangle" class="org.deepak.shape.Triangle" init-method="myInit" destroy-method="myDesposable" >
+
+    <!-- Variable of a bean class can be initialized using either setter or constructor. If both are used then constructor gets executed first
+     hence setter overrides the values -->
+
+    <property name="type" value="equilateral"/>
+    <constructor-arg type="String" value="bilatteral"/>
+    <constructor-arg type= "int" value="10"/>
+</bean>
+
+     <!--  This Bean is a parent bean which is being overriden by child beans -->
+<bean id="parentTriangle" class="org.deepak.shape.Triangle">
+    <property name="pointA" ref="pointA1"/>
+    <property name="points">
+        <list>
+            <ref bean="pointA1"/>
+        </list>
+    </property>
+</bean>
+
+   <!--This Bean is a child bean which is overriding it's parent bean -->
+     
+<bean id= "triangle1" class="org.deepak.shape.Triangle" parent="parentTriangle">
+    <!-- Getting the values of PointB and PointC from inner beans while PointA from outer bean.The Id attribute is not required for inner beans--> 
+    
+    <property name="pointB">
+        <bean class="org.deepak.shape.Point">
+		    <property name="x" value="-20"/>
+		    <property name="y" value="0"/>
+		</bean>
+    </property>
+    <property name="pointC">
+        <bean class="org.deepak.shape.Point">
+		    <property name="x" value="0"></property>
+		    <property name="y" value="20"></property>
+		</bean>
+    </property>
+</bean>
+
+<bean id="pointA1" name= "pointA1" class="org.deepak.shape.Point">
+    <property name="x" value="0"/>
+    <property name="y" value="0"/>
+</bean>
+<bean id="pointA2" name= "pointA2" class="org.deepak.shape.Point">
+    <property name="x" value="10"/>
+    <property name="y" value="15"/>
+</bean>
+
+<bean id="triangle2" class="org.deepak.shape.Triangle" destroy-method="myDesposable">
+    <property name="pointList">
+        <map>
+            <entry key="a" value-ref="pointA1"></entry>
+            <entry key="b" value-ref="pointA2"></entry>
+        </map>
+    
+    </property>
+</bean>
+
+    <!-- Use of merge=true merge the list of overriden bean with the parent bean -->
+
+<bean id="triangle3" class="org.deepak.shape.Triangle" parent="parentTriangle">
+    <property name="points">
+        <list merge="true">
+            <ref bean="pointA2" />
+        </list>
+    </property>
+</bean>
+
+    <!-- This is autowiring test -->
+<bean id="triangle4" class="org.deepak.shape.Triangle" autowire="byName">
+</bean>
+
+<bean id="pointA" class="org.deepak.shape.Point">
+    <property name="x" value="${triangle.point.x}"/>
+    <property name="y" value="${triangle.point.y}"/>
+</bean>
+
+    <!-- This configuration instanciates the PropertyPlaceholderConfigurer and loads the values defined inside the properties file -->
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="location" value="systemInfo.properties"/>
+</bean>
+
+<!-- <bean class="org.deepak.shape.DisplayBeanPostProcessor">
+</bean> -->
+
+</beans> 
